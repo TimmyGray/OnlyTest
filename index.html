@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1" >
+        <link href="./styles/main-styles.css" rel="stylesheet">
+    </head>  
+    <body>
+
+        <div class="image-body">
+
+            <table id="cellsTable" class="cells-table">
+                <tbody id="cells">
+                </tbody>
+            </table>
+
+        </div>
+
+        <script>
+
+            function generateCells(){
+                
+                const cells = document.getElementById('cells');
+
+                for(let i = 0;i<21;i++){
+
+                    const tr = document.createElement('tr');
+                    tr.id = i;
+                    cells.append(tr);
+                   
+                    for(let k = 0;k<23;k++){
+
+                        const td = document.createElement('td');
+                        td.classList.add('cell');
+                        td.id = `${i}-${k}`;
+                        tr.append(td);
+
+                    }                   
+
+                }
+
+            }
+
+            function insertPoint(cord,color,content){
+
+                const cell = document.getElementById(cord);
+                const pointContainer = document.createElement('div');
+                const textContainer = document.createElement('div');
+                const text = document.createElement('span');
+
+                if(color===0){
+
+                    pointContainer.style.backgroundImage = `url("./assets/blue-point.svg")`;
+                    pointContainer.setAttribute('color','blue');
+                    textContainer.classList.add('blue-style');
+
+                }
+                else{
+
+                    pointContainer.style.backgroundImage = 'url("./assets/green-point.svg")';
+                    pointContainer.setAttribute('color','green');
+                    textContainer.classList.add('green-style');
+
+                }
+
+                pointContainer.classList.add('location-point-container');
+                pointContainer.setAttribute('point','false');
+
+                textContainer.classList.add('location-text-container');
+                textContainer.classList.add('location-text-container-closed');
+                textContainer.classList.add('open-animated');
+                
+                text.textContent = content;
+                text.classList.add('location-text-container-text');
+                
+                textContainer.append(text);
+                pointContainer.append(textContainer);
+                cell.append(pointContainer);
+
+            }
+
+            const table = document.getElementById('cellsTable');
+            table.addEventListener('click',(event)=>{
+
+                const point = event.target;
+                console.log(point);
+
+
+                if(point.nodeName=='DIV'){
+                    if(point.hasAttribute('point')){
+
+                        let color = point.getAttribute('color');
+                        let isOpen = point.getAttribute('point');
+                        if(isOpen==='true'){
+
+                            point.firstChild.classList.toggle('location-text-container-closed');
+                            point.firstChild.classList.toggle('location-text-container-open');
+                            point.setAttribute('point','false');
+                            point.style.backgroundImage = `url(${(color==='blue')?"./assets/blue-point.svg":"./assets/green-point.svg"})`;
+
+                        }
+                        else{
+
+                            point.firstChild.classList.toggle('location-text-container-open');
+                            point.firstChild.classList.toggle('location-text-container-closed');
+                            point.setAttribute('point','true');
+                            point.style.backgroundImage = `url(${(color==='blue')?"./assets/blue-minus.svg":"./assets/green-minus.svg"})`;
+
+                        }
+                        
+                    }
+
+                    else{
+                             
+                        let color_parent = point.parentElement.getAttribute('color');
+                        let isOpen_parent = point.parentElement.getAttribute('point');
+                        if(isOpen_parent==="true"){
+
+                            point.classList.toggle('location-text-container-closed');
+                            point.classList.toggle('location-text-container-open');
+                            point.parentElement.setAttribute('point','false');
+                            point.parentElement.style.backgroundImage = `url(${(color_parent==='blue')?"./assets/blue-point.svg":"./assets/green-point.svg"})`;
+
+                        }
+                        else{
+
+                            point.classList.toggle('location-text-container-open');
+                            point.classList.toggle('location-text-container-closed');
+                            point.parentElement.setAttribute('point','true');
+                            point.parentElement.style.backgroundImage = `url(${(color_parent==='blue')?"./assets/blue-minus.svg":"./assets/green-minus.svg"})`;
+
+                        }
+                       
+                    }
+
+                }
+                
+            });
+
+            generateCells();
+
+            insertPoint('4-16', 0, 'Дом 1');
+            insertPoint('6-7', 0, 'Дом 2');
+            insertPoint('8-13', 1, 'Красивый дом 1');
+            insertPoint('9-17', 0, 'Дом 3');
+            insertPoint('10-9', 1, 'Стадион');
+            insertPoint('12-13', 0, 'Кусок стадиона');
+            insertPoint('13-15', 1, 'Красивый дом 2');
+            insertPoint('14-19', 0, 'Дом 4');
+            insertPoint('14-5', 0, 'Обелиск');
+            insertPoint('16-13', 1, 'Дом лесенкой');
+
+        </script>
+
+    </body>
+</html>
